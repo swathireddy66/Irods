@@ -1,0 +1,8 @@
+---
+
+- name: Create X user in Icat
+  command: iadmin mkuser Xuser rodsuser
+
+
+- name: Upload a file
+  command: ibun -x mydir.tar mydir

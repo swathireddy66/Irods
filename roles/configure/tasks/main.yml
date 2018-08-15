@@ -1,0 +1,21 @@
+---
+
+  - name: configure PostgreSQL
+    template: src=postgresql.j2 dest=/etc/postgresql/9.4/main/postgresql.conf
+
+  - name: Restart PostgreSQL
+    service: name=postgresql state=restarted
+
+  - name: Create PostgrSQL Database
+    become: true
+    become_user: postgres
+
+    postgresql_db: name=icat
+
+  - name: grant access to user
+    postgresql_user: db=icat name=irods password=123456 priv=ALL
+
+  - name: ensure user does not have unnecessary privilege
+    postgresql_user: name=irods role_attr_flags=NOSUPERUSER,NOCREATEDB
+
+

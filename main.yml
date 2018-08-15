@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+     - postgres
+     - configure
+     - icat
+     - user_upload

@@ -1,0 +1,30 @@
+---
+
+- name: add keyserver to apt
+  command: wget -qO - https://packages.irods.org/irods-signing-key.asc | sudo apt-key add -
+
+- name: add keyserver to apt
+  command: echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/renci-irods.list
+
+
+- name: add keyserver to apt
+  command: apt-get update -y
+
+
+- name: add keyserver to apt
+  command: apt-get install irods-server irods-database-plugin-postgres -y
+
+- name: response bootstrapping
+  template: src=genresponse.j2 dest=/home/genresponse.sh
+
+- name: generate setup responses
+  shell: 
+     mkdir -p /opt/irods;
+     mv /home/{{ ansible_ssh_user }}/genresponse.sh /opt/irods/genresponse.sh;
+     chmod +x /opt/irods/genresponse.sh;
+     /opt/irods/genresponse.sh /opt/irods/setup_responses
+
+
+- name: config iCAT server
+  shell: /var/lib/irods/scripts/setup_irods.sh < /opt/irods/setup_responses
+
